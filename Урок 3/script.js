@@ -41,16 +41,17 @@ class GoodsList {
     constructor() {
         this.goods = [];
     }
-    fetchGoods(cb) {
-        makeGETRequest(`${API_URL}/catalogData.json`)
-            .then((goods) => {
-                this.goods = JSON.parse(goods);
-                console.log('Fetch:', this.goods);
-                cb();
-            })
-            .then(() => {
+    fetchGoods() {
+        return new Promise((resolve, reject) => {
+            makeGETRequest(`${API_URL}/catalogData.json`)
+                .then((goods) => {
+                    this.goods = JSON.parse(goods);
+                    console.log('Fetch:', this.goods);
+                    resolve();
+                })
 
-            })
+        });
+
     }
 
     render() {
@@ -65,4 +66,7 @@ class GoodsList {
 }
 
 const list = new GoodsList();
-list.fetchGoods(() => list.render())
+list.fetchGoods()
+    .then(() => {
+        list.render();
+    })
